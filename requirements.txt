@@ -1,0 +1,161 @@
+# Enhanced Multi-Task Legal Reward System - Python Dependencies
+# Install with: pip install -r requirements.txt
+
+# ============================================================================
+# CORE DEPENDENCIES - Required for basic system operation
+# ============================================================================
+
+# Configuration and data handling
+pydantic>=2.0.0,<3.0.0          # Data validation and settings management
+pyyaml>=6.0,<7.0                 # YAML configuration file parsing
+python-dotenv>=1.0.0,<2.0.0     # Environment variable loading from .env files
+
+# Async HTTP client for API requests
+aiohttp>=3.8.0,<4.0.0           # Async HTTP client for API providers
+asyncio-throttle>=1.0.0,<2.0.0  # Rate limiting for async requests
+
+# ============================================================================
+# API PROVIDER INTEGRATIONS - For judge ensemble API calls
+# ============================================================================
+
+# OpenAI integration
+openai>=1.0.0,<2.0.0            # Official OpenAI Python client
+
+# Anthropic integration  
+anthropic>=0.18.0,<1.0.0        # Official Anthropic Python client
+
+# Google AI integration
+google-generativeai>=0.3.0,<1.0.0  # Google Gemini API client
+
+# ============================================================================
+# CACHING AND PERSISTENCE - For aggressive cost optimization
+# ============================================================================
+
+# Caching backends
+diskcache>=5.6.0,<6.0.0         # Disk-based caching with compression
+redis>=4.5.0,<6.0.0             # Optional Redis caching (advanced setups)
+
+# Data compression
+lz4>=4.0.0,<5.0.0               # Fast compression for cache data
+zstandard>=0.20.0,<1.0.0        # High-ratio compression option
+
+# ============================================================================
+# LOGGING AND MONITORING - Production-ready observability
+# ============================================================================
+
+# Structured logging
+structlog>=23.0.0,<24.0.0       # Structured logging with JSON output
+colorama>=0.4.6,<1.0.0          # Cross-platform colored terminal text
+
+# Performance monitoring
+psutil>=5.9.0,<6.0.0            # System and process monitoring
+memory-profiler>=0.60.0,<1.0.0  # Memory usage profiling (development)
+
+# ============================================================================
+# LEGAL TEXT PROCESSING - US jurisdiction and legal text analysis
+# ============================================================================
+
+# Natural language processing
+spacy>=3.6.0,<4.0.0             # Advanced NLP for legal text analysis
+nltk>=3.8.0,<4.0.0              # Natural language toolkit
+
+# Text processing utilities
+fuzzywuzzy>=0.18.0,<1.0.0       # Fuzzy string matching for jurisdiction inference
+python-Levenshtein>=0.20.0,<1.0.0  # Fast string distance calculations
+
+# ============================================================================
+# DEVELOPMENT AND TESTING - Testing framework and quality tools
+# ============================================================================
+
+# Testing framework
+pytest>=7.4.0,<8.0.0            # Main testing framework
+pytest-asyncio>=0.21.0,<1.0.0   # Async testing support
+pytest-mock>=3.11.0,<4.0.0      # Mocking utilities
+pytest-cov>=4.1.0,<5.0.0        # Coverage reporting
+pytest-benchmark>=4.0.0,<5.0.0  # Performance benchmarking
+
+# Test utilities
+factory-boy>=3.3.0,<4.0.0       # Test data generation
+hypothesis>=6.82.0,<7.0.0       # Property-based testing
+freezegun>=1.2.0,<2.0.0         # Time mocking for tests
+
+# Code quality
+black>=23.7.0,<24.0.0           # Code formatting
+isort>=5.12.0,<6.0.0            # Import sorting
+flake8>=6.0.0,<7.0.0            # Linting
+mypy>=1.5.0,<2.0.0              # Type checking
+bandit>=1.7.0,<2.0.0            # Security linting
+
+# ============================================================================
+# OPTIONAL DEPENDENCIES - Enhanced features and integrations
+# ============================================================================
+
+# Database support (for advanced caching and persistence)
+sqlalchemy>=2.0.0,<3.0.0        # SQL toolkit and ORM
+alembic>=1.11.0,<2.0.0          # Database migrations
+
+# Advanced monitoring (for production deployments)
+prometheus-client>=0.17.0,<1.0.0  # Metrics collection
+jaeger-client>=4.8.0,<5.0.0       # Distributed tracing
+
+# Legal document processing (for advanced legal text analysis)
+pdfplumber>=0.9.0,<1.0.0        # PDF text extraction
+python-docx>=0.8.11,<1.0.0      # Word document processing
+
+# ============================================================================
+# VERL INTEGRATION DEPENDENCIES - For training integration
+# ============================================================================
+
+# PyTorch ecosystem (required by VERL)
+torch>=2.0.0,<3.0.0             # PyTorch for tensor operations
+transformers>=4.30.0,<5.0.0     # Hugging Face transformers
+accelerate>=0.20.0,<1.0.0       # Distributed training utilities
+
+# ============================================================================
+# PLATFORM-SPECIFIC DEPENDENCIES
+# ============================================================================
+
+# Windows-specific
+pywin32>=306; sys_platform == "win32"  # Windows API access
+
+# macOS-specific  
+pyobjc-framework-Cocoa>=9.0; sys_platform == "darwin"  # macOS frameworks
+
+# ============================================================================
+# DEVELOPMENT ENVIRONMENT SETUP
+# ============================================================================
+
+# Jupyter notebooks (for development and analysis)
+jupyter>=1.0.0,<2.0.0           # Jupyter notebook environment
+ipykernel>=6.25.0,<7.0.0        # IPython kernel for Jupyter
+
+# Environment management
+python-decouple>=3.8,<4.0       # Environment variable management
+environs>=9.5.0,<10.0.0         # Environment parsing utilities
+
+# ============================================================================
+# INSTALLATION NOTES
+# ============================================================================
+#
+# Installation Order:
+# 1. pip install --upgrade pip setuptools wheel
+# 2. pip install -r requirements.txt
+# 3. python -m spacy download en_core_web_sm  # For NLP models
+# 4. python -c "import nltk; nltk.download('punkt')"  # For NLTK data
+#
+# For development:
+# pip install -r requirements.txt[dev]
+#
+# For production (minimal):
+# pip install pydantic pyyaml python-dotenv aiohttp openai anthropic google-generativeai structlog
+#
+# GPU Support (for VERL integration):
+# pip install torch --index-url https://download.pytorch.org/whl/cu118
+#
+# ============================================================================
+
+# Version compatibility notes:
+# - Python 3.8+ required (3.11+ recommended for optimal performance)
+# - Compatible with both CPU and GPU environments
+# - Tested on Linux, macOS, and Windows
+# - Optimized for 8 A100 GPU training setups (VERL integration)

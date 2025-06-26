@@ -1,0 +1,344 @@
+# Enhanced Multi-Task Legal Reward System - Internal Configuration
+# Complete configuration for US jurisdiction support with aggressive cost optimization
+
+# ============================================================================
+# API PROVIDERS - Multi-provider setup with cost optimization and rate limits
+# ============================================================================
+api_providers:
+  openai:
+    model: "gpt-4-turbo"
+    rate_limit_rpm: 500              # Requests per minute
+    rate_limit_tpm: 30000            # Tokens per minute  
+    max_concurrent_requests: 10      # Concurrent request limit
+    cost_per_1k_input_tokens: 0.01   # Cost per 1K input tokens (USD)
+    cost_per_1k_output_tokens: 0.03  # Cost per 1K output tokens (USD)
+    fallback_priority: 1             # Primary provider for complex tasks
+    timeout_seconds: 30
+    max_retries: 3
+    suitable_for_complex: true       # Best for judicial reasoning, precedent analysis
+    
+  anthropic:
+    model: "claude-3-5-sonnet-20241022"
+    rate_limit_rpm: 400
+    rate_limit_tpm: 40000
+    max_concurrent_requests: 8
+    cost_per_1k_input_tokens: 0.003
+    cost_per_1k_output_tokens: 0.015
+    fallback_priority: 2             # Secondary provider, good balance
+    timeout_seconds: 25
+    max_retries: 3
+    suitable_for_complex: true       # Excellent for legal reasoning
+    
+  google:
+    model: "gemini-1.5-pro"
+    rate_limit_rpm: 300
+    rate_limit_tpm: 32000
+    max_concurrent_requests: 6
+    cost_per_1k_input_tokens: 0.00125
+    cost_per_1k_output_tokens: 0.005
+    fallback_priority: 3             # Cost-effective for simple tasks
+    timeout_seconds: 20
+    max_retries: 3
+    suitable_for_complex: false      # Best for general chat, simple evaluations
+
+# ============================================================================
+# AGGRESSIVE CACHING - Designed for maximum cost savings during training
+# ============================================================================
+caching:
+  enabled: true
+  strategy: "aggressive"             # aggressive, balanced, conservative, disabled
+  cache_dir: "/tmp/legal_reward_cache"
+  max_cache_size_gb: 10             # Maximum cache storage
+  cache_ttl_hours: 168              # 1 week - legal evaluations are stable
+  hash_input_content: true          # Content-based cache keys
+  compression: true                 # gzip compression for storage efficiency
+  persist_across_sessions: true     # Survive training restarts
+  max_memory_entries: 1000          # Hot cache size
+  
+  # Cost optimization settings
+  cache_threshold_usd: 0.0          # Cache everything for aggressive strategy
+  expected_hit_rate: 0.8            # Target 80% cache hit rate
+  track_savings: true               # Track cost savings from caching
+  cleanup_on_startup: false         # Keep existing cache
+  
+  # Compression settings
+  compression_level: 6              # Balance speed vs compression ratio
+  compress_threshold_bytes: 1024    # Only compress if larger than 1KB
+
+# ============================================================================
+# SMART RATE LIMITING - Multi-provider optimization with failover
+# ============================================================================
+rate_limiting:
+  strategy: "token_bucket"          # token_bucket, sliding_window, fixed_window
+  retry_attempts: 3                 # Max retry attempts per request
+  backoff_multiplier: 2.0           # Exponential backoff multiplier
+  max_backoff_seconds: 60           # Maximum backoff time
+  enable_fallback_chains: true      # Use provider fallback chains
+  jitter_enabled: true              # Add jitter to prevent thundering herd
+  
+  # Provider-specific backoff adjustments
+  provider_backoff_multipliers:
+    openai: 1.2                     # Stricter rate limits
+    anthropic: 1.0                  # Standard backoff
+    google: 0.8                     # More forgiving
+
+# ============================================================================
+# HYBRID EVALUATION - Core innovation: 70% specialized + 30% chat quality
+# ============================================================================
+hybrid_evaluation:
+  specialized_weight: 0.7           # Weight for specialized legal evaluation
+  general_chat_weight: 0.3          # Weight for chat quality assessment
+  jurisdiction_failure_penalty: 0.2 # Penalty multiplier for jurisdiction failures
+  require_jurisdiction_compliance: true
+  
+  # Evaluation method routing
+  method_routing:
+    judicial_reasoning: "specialized_hybrid"
+    precedent_analysis: "specialized_hybrid" 
+    opinion_generation: "specialized_hybrid"
+    general_chat: "general_chat_only"
+  
+  # Quality thresholds
+  minimum_ensemble_confidence: 0.5  # Minimum confidence for reliable scores
+  jurisdiction_compliance_threshold: 3.0  # Minimum score for jurisdiction compliance
+
+# ============================================================================
+# TASK DIFFICULTY WEIGHTING - Optimized for legal task complexity
+# ============================================================================
+task_weights:
+  judicial_reasoning: 1.5           # Hardest - formal judicial analysis, FIRAC
+  precedent_analysis: 1.3           # Hard - deep case law knowledge required
+  opinion_generation: 1.1           # Medium-hard - creative legal writing
+  general_chat: 1.0                 # Baseline - conversational assistance
+  
+  # Dynamic weight adjustment
+  enable_performance_adjustment: true
+  adjustment_sensitivity: 0.05      # Maximum weight change per adjustment
+  adjustment_frequency_evaluations: 100  # Adjust weights every N evaluations
+  weight_bounds:
+    minimum: 0.5
+    maximum: 2.0
+
+# ============================================================================
+# COST OPTIMIZATION - Aggressive cost management for training efficiency
+# ============================================================================
+cost_optimization:
+  max_monthly_api_budget: 1000      # Maximum monthly API spend (USD)
+  prefer_cheaper_models_for_simple_tasks: true
+  use_model_fallback_chain: true    # Fallback to cheaper providers when possible
+  cost_tracking_enabled: true       # Track all API costs
+  budget_alert_thresholds: [0.5, 0.75, 0.9, 0.95]  # Budget usage alert levels
+  
+  # Provider selection optimization
+  complexity_routing:
+    simple_tasks: ["google", "anthropic", "openai"]      # Cheapest first
+    medium_tasks: ["anthropic", "openai", "google"]      # Balanced
+    complex_tasks: ["openai", "anthropic", "google"]     # Quality first
+  
+  # Cost estimation
+  estimate_tokens_from_chars: true  # Estimate tokens for cost calculation
+  chars_per_token: 4               # Rough estimation: 4 chars per token
+  cost_safety_margin: 1.1         # 10% safety margin for cost estimates
+
+# ============================================================================
+# COMPREHENSIVE LOGGING - Production-ready monitoring and debugging
+# ============================================================================
+logging:
+  level: "INFO"                     # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  structured_logging: true         # JSON format for production monitoring
+  log_file: "legal_reward_system.log"
+  max_file_size_mb: 100           # Rotating log file size
+  backup_count: 5                 # Number of backup log files
+  
+  # Legal system specific logging
+  log_api_costs: true             # Log all API cost information
+  log_cache_performance: true     # Log cache hits/misses and savings
+  log_jurisdiction_inference: true # Log jurisdiction inference results
+  log_hybrid_evaluation: true     # Log hybrid evaluation details
+  log_performance_metrics: true   # Log performance timing
+  
+  # Console and file output
+  console_output: true            # Log to console
+  file_output: true               # Log to file
+  json_format: true               # Structured JSON logging
+
+# ============================================================================
+# US JURISDICTION SYSTEM - Complete US legal system support
+# ============================================================================
+jurisdiction:
+  enable_inference: true                    # Enable automatic jurisdiction inference
+  require_compliance_check: true           # Require jurisdiction compliance validation
+  default_jurisdiction: "general"          # Default when unclear
+  inference_confidence_threshold: 0.7      # Minimum confidence for auto-inference
+  
+  # Jurisdiction handling
+  ask_user_for_critical_areas: true       # Ask user for jurisdiction-critical topics
+  require_disclaimer_for_general: true    # Require disclaimers for general concepts
+  track_inference_accuracy: true          # Track inference performance
+  
+  # US-specific settings
+  support_all_50_states: true            # Full US state coverage
+  include_federal_jurisdiction: true      # Federal law support
+  include_dc: true                       # District of Columbia support
+  
+  # Critical legal areas requiring jurisdiction specification
+  jurisdiction_critical_domains:
+    - "civil_procedure"
+    - "criminal" 
+    - "family"
+    - "real_estate"
+    - "employment"
+    - "tax"
+    - "corporate"
+    - "bankruptcy"
+    - "healthcare"
+
+# ============================================================================
+# SYSTEM PERFORMANCE - Optimized for 8 A100 GPU training setup
+# ============================================================================
+performance:
+  max_concurrent_evaluations: 10          # Concurrent evaluation limit
+  evaluation_timeout_seconds: 30          # Maximum time per evaluation
+  batch_processing_enabled: true          # Enable batch processing
+  optimal_batch_sizes:
+    openai: 10                            # Optimal batch size per provider
+    anthropic: 8
+    google: 12
+  
+  # Memory management
+  max_memory_usage_gb: 4                  # Maximum memory usage
+  gc_frequency_evaluations: 100           # Garbage collection frequency
+  
+  # Performance monitoring
+  track_evaluation_times: true            # Track all evaluation timing
+  track_api_response_times: true          # Track API response times
+  track_cache_performance: true           # Track cache hit rates
+  performance_report_frequency: 1000     # Report every N evaluations
+
+# ============================================================================
+# JUDGE ENSEMBLE CONFIGURATION - Settings for all judge types
+# ============================================================================
+judge_ensembles:
+  # Enhanced General Chat Ensemble (always active)
+  enhanced_general_chat:
+    enabled: true
+    judge_weights:
+      helpfulness: 0.25
+      legal_ethics: 0.25
+      clarity: 0.25
+      jurisdiction_compliance: 0.25      # Critical gating component
+    
+    # Individual judge settings
+    helpfulness_judge:
+      provider_preference: ["anthropic", "openai", "google"]
+      max_retries: 2
+    
+    legal_ethics_judge:
+      provider_preference: ["openai", "anthropic", "google"]  # OpenAI first for ethics
+      max_retries: 2
+    
+    clarity_judge:
+      provider_preference: ["google", "anthropic", "openai"]  # Google good for clarity
+      max_retries: 2
+    
+    jurisdiction_compliance_judge:
+      provider_preference: ["openai", "anthropic", "google"]
+      max_retries: 1                    # Faster for gating function
+      failure_penalty: 0.5              # 50% penalty for jurisdiction failures
+  
+  # Specialized ensembles (implemented in later phases)
+  judicial_reasoning:
+    enabled: false                      # Will be enabled when implemented
+    provider_preference: ["openai", "anthropic"]  # Complex reasoning needs best models
+    
+  precedent_analysis:
+    enabled: false
+    provider_preference: ["openai", "anthropic"]
+    
+  opinion_generation:
+    enabled: false
+    provider_preference: ["anthropic", "openai", "google"]
+
+# ============================================================================
+# VERL INTEGRATION - Settings for training framework integration
+# ============================================================================
+verl_integration:
+  batch_size: 32                        # Batch size for VERL processing
+  return_detailed_metadata: true        # Include detailed evaluation metadata
+  handle_malformed_data: true           # Gracefully handle bad VERL data
+  fallback_score: 5.0                   # Neutral score for errors
+  
+  # Data format handling
+  support_legacy_format: true           # Support older VERL data formats
+  auto_convert_task_types: true         # Auto-convert task type strings
+  validate_input_data: true             # Validate VERL input data
+  
+  # Performance for training
+  async_processing: true                # Async processing for throughput
+  result_caching: true                  # Cache VERL results
+  performance_monitoring: true          # Monitor VERL integration performance
+
+# ============================================================================
+# DEVELOPMENT AND TESTING - Development environment settings
+# ============================================================================
+development:
+  mock_api_calls: false                 # Use real APIs by default
+  enable_debug_logging: false           # Extra debug information
+  skip_cache: false                     # Use caching by default
+  test_mode: false                      # Normal operation mode
+  
+  # Testing overrides
+  test_mode_overrides:
+    api_providers:
+      openai:
+        rate_limit_rpm: 10              # Reduced for testing
+        cost_per_1k_input_tokens: 0.0   # No cost in test mode
+    caching:
+      cache_ttl_hours: 1                # Short TTL for testing
+    cost_optimization:
+      max_monthly_api_budget: 100       # Reduced budget for testing
+
+# ============================================================================
+# SECURITY AND COMPLIANCE - Security settings for production
+# ============================================================================
+security:
+  mask_api_keys_in_logs: true          # Never log API keys
+  encrypt_cache_data: false            # Cache encryption (set true for sensitive data)
+  secure_config_loading: true          # Validate config file integrity
+  
+  # Environment variable requirements
+  required_env_vars:
+    - "OPENAI_API_KEY"
+    - "ANTHROPIC_API_KEY"  
+    - "GOOGLE_API_KEY"
+  
+  # Optional environment variables
+  optional_env_vars:
+    - "LEGAL_REWARD_LOG_LEVEL"
+    - "LEGAL_REWARD_CACHE_DIR"
+    - "LEGAL_REWARD_MAX_BUDGET"
+
+# ============================================================================
+# SYSTEM METADATA - Version and system information
+# ============================================================================
+system:
+  version: "1.0.0"
+  config_version: "1.0"
+  last_updated: "2024-12-19"
+  description: "Enhanced Multi-Task Legal Reward System with US Jurisdiction Support"
+  
+  # System requirements
+  minimum_python_version: "3.8"
+  recommended_python_version: "3.11"
+  required_packages:
+    - "asyncio"
+    - "aiohttp" 
+    - "pydantic"
+    - "pyyaml"
+    - "sqlite3"
+  
+  # Legal AI specific metadata
+  legal_system_focus: "United States"
+  supported_jurisdictions: 52          # 50 states + DC + federal
+  supported_task_types: 4              # Four main legal task types
+  evaluation_methodology: "hybrid"     # Specialized + general chat hybrid

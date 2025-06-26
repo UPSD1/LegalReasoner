@@ -1,0 +1,110 @@
+api_config:
+  api_keys_required:
+  - OPENAI_API_KEY
+  - ANTHROPIC_API_KEY
+  - GOOGLE_API_KEY
+  cost_tracking_enabled: true
+  mock_mode: true
+  provider_fallback_testing: true
+  rate_limit_testing: true
+  retry_attempts: 3
+  retry_delay_seconds: 1.0
+  timeout_seconds: 30.0
+ci_config:
+  artifact_retention_days: 30
+  full_test_timeout_minutes: 60
+  max_parallel_jobs: 4
+  notification_channels:
+  - slack
+  - email
+  parallel_execution: true
+  performance_test_timeout_minutes: 30
+  quick_test_timeout_minutes: 10
+  required_coverage_percent: 90.0
+enable_performance_profiling: false
+environment: development
+generate_html_reports: true
+load_test_config:
+  batch_sizes:
+  - 8
+  - 16
+  - 32
+  - 64
+  - 128
+  concurrent_users_range:
+  - 1
+  - 5
+  - 10
+  - 20
+  - 50
+  - 100
+  max_users_stress_test: 500
+  ramp_up_time_seconds: 10.0
+  stress_test_step_size: 25
+  test_duration_seconds: 60.0
+  think_time_seconds: 1.0
+logs_directory: ./test_logs
+mock_data_config:
+  complexity_levels:
+  - simple
+  - medium
+  - complex
+  legal_domains:
+  - constitutional
+  - contract
+  - tort
+  - criminal
+  - civil_procedure
+  - evidence
+  - corporate
+  - intellectual_property
+  - family
+  - employment
+  num_jurisdictions: 53
+  num_legal_queries: 1000
+  quality_score_range: !!python/tuple
+  - 0.6
+  - 0.95
+  response_length_range: !!python/tuple
+  - 50
+  - 500
+  task_types:
+  - judicial_reasoning
+  - precedent_analysis
+  - opinion_generation
+  - general_chat
+performance_thresholds:
+  max_error_rate_percent: 5.0
+  max_evaluation_time_seconds: 2.0
+  max_memory_usage_mb: 2048.0
+  max_response_time_seconds: 3.0
+  max_training_cost_per_cycle: 1500.0
+  min_cache_hit_rate_percent: 60.0
+  min_cost_reduction_percent: 70.0
+  min_gpu_utilization_percent: 70.0
+  min_success_rate_percent: 95.0
+  min_throughput_ops_per_second: 10.0
+results_directory: ./test_results
+save_test_artifacts: true
+test_data_directory: ./test_data
+test_mode: full
+verbose_logging: true
+verl_config:
+  batch_sizes:
+  - 8
+  - 16
+  - 32
+  - 64
+  - 128
+  checkpoint_testing: true
+  distributed_training: true
+  epochs: 3
+  gpu_count: 8
+  gradient_accumulation_steps: 4
+  learning_rate: 1.0e-05
+  mixed_precision: true
+  sequence_lengths:
+  - 128
+  - 256
+  - 512
+  training_simulation_samples: 10000
