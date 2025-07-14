@@ -27,12 +27,12 @@ from collections import defaultdict, Counter
 import json
 
 # Import core components
-from ..core import (
+from core import (
     USJurisdiction, LegalDomain, LegalTaskType,
     LegalRewardSystemError, create_error_context,
     APIProvider, LegalRewardSystemError
 )
-from .us_system import (
+from jurisdiction.us_system import (
     JurisdictionMetadata, USJurisdictionError,
     get_all_jurisdiction_metadata, validate_jurisdiction,
     get_federal_circuit_states, get_region_states,

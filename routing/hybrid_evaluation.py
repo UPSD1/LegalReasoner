@@ -26,16 +26,16 @@ from dataclasses import dataclass, field
 from enum import Enum
 
 # Import core components
-from ..core import (
+from core import (
     LegalRewardEvaluation, JudgeEvaluation, EvaluationMetadata,
     LegalTaskType, USJurisdiction, LegalDomain,
     LegalRewardSystemError, create_error_context
 )
-from ..judges.general_chat import (
+from judges.general_chat import (
     EnhancedGeneralChatEnsemble, GeneralChatEvaluationResult,
     create_production_general_chat_ensemble
 )
-from ..judges.base import EvaluationContext, create_evaluation_context
+from judges.base import EvaluationContext, create_evaluation_context
 
 
 class EvaluationMode(Enum):

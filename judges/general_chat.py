@@ -25,16 +25,16 @@ from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass, field
 
 # Import core components
-from ..core import (
+from core import (
     LegalRewardEvaluation, JudgeEvaluation, EvaluationMetadata,
     APIProvider, LegalTaskType, USJurisdiction, LegalDomain,
     LegalRewardSystemError, create_error_context
 )
-from ..jurisdiction import (
+from jurisdiction import (
     JurisdictionComplianceJudge, JurisdictionComplianceResult,
     create_production_compliance_judge
 )
-from .base import (
+from judges.base import (
     BaseJudge, BaseJudgeEnsemble, JudgeConfig, EvaluationContext,
     JudgeType, EvaluationStrategy, create_general_chat_judge_config,
     create_individual_judge_config

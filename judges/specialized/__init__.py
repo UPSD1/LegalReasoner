@@ -16,21 +16,21 @@ to provide comprehensive legal evaluation through the hybrid system.
 """
 
 # Import all real specialized ensembles
-from .judicial_reasoning import (
+from judges.specialized.judicial_reasoning import (
     JudicialReasoningEnsemble,
     JudicialReasoningScore,
     JudicialAnalysisComponent,
     create_judicial_reasoning_ensemble
 )
 
-from .precedent_analysis import (
+from judges.specialized.precedent_analysis import (
     PrecedentAnalysisEnsemble,
     PrecedentAnalysisScore,
     PrecedentAnalysisComponent,
     create_precedent_analysis_ensemble
 )
 
-from .opinion_generation import (
+from judges.specialized.opinion_generation import (
     OpinionGenerationEnsemble,
     OpinionGenerationScore,
     OpinionGenerationComponent,
@@ -39,10 +39,10 @@ from .opinion_generation import (
 
 # Import core components for type hints
 from typing import Dict, Optional
-from ...core import LegalTaskType
-from ...config import LegalRewardSystemConfig
-from ..api_client import CostOptimizedAPIClient
-from ..base import BaseJudgeEnsemble
+from core import LegalTaskType
+from config import LegalRewardSystemConfig
+from judges.api_client import CostOptimizedAPIClient
+from judges.base import BaseJudgeEnsemble
 
 # Package version and metadata
 __version__ = "1.0.0"

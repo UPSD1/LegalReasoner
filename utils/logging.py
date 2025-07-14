@@ -37,7 +37,7 @@ import asyncio
 from concurrent.futures import ThreadPoolExecutor
 
 # Import core components
-from ..core import (
+from core import (
     LegalRewardSystemError, APIProvider, LegalTaskType, 
     USJurisdiction, LogLevel, ERROR_CODES
 )

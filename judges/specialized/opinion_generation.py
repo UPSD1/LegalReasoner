@@ -13,15 +13,15 @@ from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
 from enum import Enum
 
-from ...core import (
+from core import (
     LegalTaskType, USJurisdiction, LegalDomain,
     JudgeEvaluation, EvaluationMetadata,
     LegalRewardSystemError, create_error_context
 )
-from ...config import LegalRewardSystemConfig
-from ..base import BaseJudgeEnsemble
-from ..api_client import CostOptimizedAPIClient
-from ...utils import get_legal_logger
+from config import LegalRewardSystemConfig
+from judges.base import BaseJudgeEnsemble
+from judges.api_client import CostOptimizedAPIClient
+from utils import get_legal_logger
 
 
 class OpinionGenerationComponent(Enum):

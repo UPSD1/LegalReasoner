@@ -8,7 +8,7 @@ This package provides the core routing and evaluation logic including:
 """
 
 # Import router components - Make sure RouterConfig and RouterMode are imported first
-from .router import (
+from routing.router import (
     # Configuration classes
     RouterConfig,
     RouterMode,
@@ -32,7 +32,7 @@ from .router import (
 )
 
 # Hybrid Evaluation System
-from .hybrid_evaluation import (
+from routing.hybrid_evaluation import (
     HybridEvaluationEngine,
     HybridEvaluationResult,
     EvaluationMode,
@@ -42,7 +42,7 @@ from .hybrid_evaluation import (
 )
 
 # Task Weight Management
-from .task_weights import (
+from routing.task_weights import (
     TaskDifficultyWeightManager,
     TaskPerformanceData,
     WeightChangeRecord,

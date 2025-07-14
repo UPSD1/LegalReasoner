@@ -29,21 +29,21 @@ from dataclasses import dataclass, field
 from enum import Enum
 
 # Import core components
-from .core import (
+from core import (
     LegalDataPoint, LegalRewardEvaluation, EvaluationMetadata,
     LegalTaskType, USJurisdiction, LegalDomain,
     LegalRewardSystemError, create_error_context
 )
 
 # Import routing system
-from .routing import (
+from routing import (
     MultiTaskLegalRewardRouter, RouterEvaluationResult, EvaluationRequest,
     create_production_router, create_development_router, RouterConfig, RouterMode
 )
 
 # Import configuration and utilities
-from .config import LegalRewardSystemConfig, create_production_config, create_development_config
-from .utils import get_legal_logger
+from config import LegalRewardSystemConfig, create_production_config, create_development_config
+from utils import get_legal_logger
 
 
 class VERLDataFormat(Enum):
@@ -167,7 +167,7 @@ class VERLDataConverter:
                 query=ground_truth or data_source,  # Use ground_truth as query if available
                 response=solution_str,
                 task_type=task_type,
-                jurisdiction=jurisdiction,
+                jurisdiction=jurisdiction.value,
                 legal_domain=legal_domain,  # FIX: Use legal_domain (singular) not legal_domains
                 metadata={
                     "verl_data_source": data_source,
@@ -411,7 +411,7 @@ class VERLLegalRewardFunction:
                 task_type=legal_data_point.task_type,
                 prompt=legal_data_point.query,
                 jurisdiction=legal_data_point.jurisdiction,
-                legal_domains=legal_data_point.legal_domains,
+                legal_domains=[legal_data_point.legal_domain],
                 user_context=legal_data_point.metadata
             )
             
@@ -477,7 +477,7 @@ class VERLLegalRewardFunction:
                     task_type=data_point.task_type,
                     prompt=data_point.query,
                     jurisdiction=data_point.jurisdiction,
-                    legal_domains=data_point.legal_domains,
+                    legal_domains=[data_point.legal_domain],
                     user_context=data_point.metadata
                 )
                 requests.append(request)

@@ -26,17 +26,17 @@ from enum import Enum
 import json
 
 # Import core components
-from ..core import (
+from core import (
     LegalRewardEvaluation, JudgeEvaluation, EvaluationMetadata,
     USJurisdiction, LegalDomain, LegalTaskType,
     LegalRewardSystemError, create_error_context
 )
-from .us_system import (
+from jurisdiction.us_system import (
     JurisdictionMetadata, USJurisdictionError,
     get_all_jurisdiction_metadata, validate_jurisdiction,
     get_jurisdiction_context, is_jurisdiction_federal_only
 )
-from .inference_engine import (
+from jurisdiction.inference_engine import (
     JurisdictionInferenceEngine, JurisdictionInferenceResult,
     create_production_inference_engine
 )

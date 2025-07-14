@@ -13,7 +13,7 @@ utility functionality without needing to know internal module structure.
 """
 
 # Enhanced Logging System
-from .logging import (
+from utils.logging import (
     LegalRewardLogger,
     APIRequestLog,
     PerformanceMetric,
@@ -27,7 +27,7 @@ from .logging import (
 )
 
 # Aggressive Caching System
-from .cache import (
+from utils.cache import (
     MultiStrategyLegalRewardCache,
     CacheEntry,
     CacheKeyGenerator,
@@ -40,7 +40,7 @@ from .cache import (
 )
 
 # Smart Rate Limiting System
-from .rate_limiter import (
+from utils.rate_limiter import (
     MultiProviderRateLimiter,
     TokenBucketLimiter,
     TokenBucket,

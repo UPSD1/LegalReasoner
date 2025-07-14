@@ -27,7 +27,7 @@ from enum import Enum
 from pathlib import Path
 
 # Import core components
-from ..core import (
+from core import (
     USJurisdiction, LegalDomain, LegalRewardSystemError,
     create_error_context, US_STATES_AND_TERRITORIES
 )

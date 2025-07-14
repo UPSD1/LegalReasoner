@@ -33,11 +33,11 @@ import random
 import math
 
 # Import core components
-from ..core import (
+from core import (
     APIProvider, RateLimitExceededError, APIClientError, 
     LegalTaskType, create_error_context, ERROR_CODES
 )
-from .logging import get_legal_logger
+from utils.logging import get_legal_logger
 
 
 @dataclass

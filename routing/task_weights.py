@@ -27,11 +27,11 @@ from dataclasses import dataclass, field
 from enum import Enum
 
 # Import core components
-from ..core import (
+from core import (
     LegalTaskType, LegalRewardSystemError, create_error_context
 )
-from ..config import LegalRewardSystemConfig
-from ..utils import get_legal_logger
+from config import LegalRewardSystemConfig
+from utils import get_legal_logger
 
 
 class WeightAdjustmentReason(Enum):

@@ -28,12 +28,12 @@ from enum import Enum
 import json
 
 # Import core components
-from ..core import (
+from core import (
     LegalRewardEvaluation, JudgeEvaluation, EvaluationMetadata,
     APIProvider, LegalTaskType, USJurisdiction, LegalDomain,
     LegalRewardSystemError, create_error_context
 )
-from ..utils import (
+from utils import (
     LegalRewardLogger, get_legal_logger,
     MultiStrategyLegalRewardCache, ManagedCache,
     MultiProviderRateLimiter, ManagedRateLimiter

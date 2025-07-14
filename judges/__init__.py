@@ -6,7 +6,7 @@ and real specialized ensembles for production legal evaluation.
 """
 
 # Base judge framework
-from .base import (
+from judges.base import (
     BaseJudge,
     BaseJudgeEnsemble,
     JudgeConfig,
@@ -21,7 +21,7 @@ from .base import (
 )
 
 # API client for all judges
-from .api_client import (
+from judges.api_client import (
     CostOptimizedAPIClient,
     # APIClientConfig,
     # ProviderConfig,
@@ -33,7 +33,7 @@ from .api_client import (
 )
 
 # General chat ensemble
-from .general_chat import (
+from judges.general_chat import (
     EnhancedGeneralChatEnsemble,
     # GeneralChatConfig,
     # GeneralChatJudge,
@@ -42,7 +42,7 @@ from .general_chat import (
 )
 
 # REAL SPECIALIZED ENSEMBLES - ADD THESE IMPORTS
-from .specialized import (
+from judges.specialized import (
     # Real ensemble classes
     JudicialReasoningEnsemble,
     PrecedentAnalysisEnsemble,

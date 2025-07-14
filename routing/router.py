@@ -21,6 +21,7 @@ a single, reliable interface for the enhanced legal reward system.
 """
 
 import asyncio
+from collections import defaultdict
 import logging
 import time
 import uuid
@@ -29,36 +30,36 @@ from dataclasses import dataclass, field
 from enum import Enum
 
 # Import core components
-from ..core import (
+from core import (
     LegalRewardEvaluation, JudgeEvaluation, EvaluationMetadata,
     LegalTaskType, USJurisdiction, LegalDomain, APIProvider,
     LegalRewardSystemError, create_error_context
 )
 
 # Import system components
-from ..config import LegalRewardSystemConfig, create_production_config
-from ..jurisdiction import (
+from config import LegalRewardSystemConfig, create_production_config
+from jurisdiction import (
     JurisdictionInferenceEngine, create_production_inference_engine,
     JurisdictionComplianceJudge, create_production_compliance_judge
 )
-from ..judges.general_chat import (
+from judges.general_chat import (
     EnhancedGeneralChatEnsemble, create_production_general_chat_ensemble
 )
-from ..judges.api_client import (
+from judges.api_client import (
     CostOptimizedAPIClient, create_production_api_client
 )
-from .hybrid_evaluation import (
+from routing.hybrid_evaluation import (
     HybridEvaluationEngine, HybridEvaluationResult, 
     create_production_hybrid_engine, EvaluationMode
 )
-from ..utils import (
+from utils import (
     LegalRewardLogger, get_legal_logger,
     MultiStrategyLegalRewardCache, create_aggressive_cache,
     MultiProviderRateLimiter, create_production_rate_limiter
 )
 
-from ..judges.base import BaseJudgeEnsemble, create_evaluation_context
-from .task_weights import TaskDifficultyWeightManager
+from judges.base import BaseJudgeEnsemble, create_evaluation_context
+from routing.task_weights import TaskDifficultyWeightManager
 
 class RouterMode(Enum):
     """Operating modes for the legal reward router"""
@@ -86,6 +87,7 @@ class RouterConfig:
     enable_hybrid_evaluation: bool = True
     enable_caching: bool = True
     enable_cost_optimization: bool = True
+    cache_evaluation_results: bool = True
     
     # Performance settings
     max_concurrent_evaluations: int = 10
@@ -379,13 +381,16 @@ class MultiTaskLegalRewardRouter:
         
         try:
             # Initialize core evaluation components
-            self.hybrid_evaluation_system = HybridEvaluationEngine(self.system_config)
+            self.hybrid_evaluation_system = create_production_hybrid_engine() #HybridEvaluationEngine(self.system_config)
             self.weight_manager = TaskDifficultyWeightManager(self.system_config)
-            self.api_client = CostOptimizedAPIClient(self.system_config)
+            # self.api_client = CostOptimizedAPIClient(self.system_config)
+            self._initialize_system_components()
             
             # Initialize jurisdiction components
-            self.jurisdiction_inference_engine = JurisdictionInferenceEngine(self.system_config)
-            self.compliance_judge = JurisdictionComplianceJudge(self.system_config)
+            # self.jurisdiction_inference_engine = JurisdictionInferenceEngine(self.system_config)
+            # self.compliance_judge = JurisdictionComplianceJudge(self.system_config)
+            self.jurisdiction_inference_engine = create_production_inference_engine()
+            self.compliance_judge = create_production_compliance_judge()
             
             # Initialize judge ensemble registry
             self.judge_ensembles = {}
@@ -416,6 +421,7 @@ class MultiTaskLegalRewardRouter:
                 "avg_evaluation_time": 0.0,
                 "task_type_distribution": {task_type: 0 for task_type in LegalTaskType},
                 "jurisdiction_distribution": {},
+                "evaluation_mode_distribution": defaultdict(int),
                 "gating_failures": 0
             }
             

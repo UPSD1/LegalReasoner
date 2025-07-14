@@ -36,11 +36,11 @@ from collections import OrderedDict
 import pickle
 
 # Import core components
-from ..core import (
+from core import (
     LegalRewardSystemError, CacheError, LegalTaskType, 
     USJurisdiction, CacheStrategy, create_error_context
 )
-from .logging import get_legal_logger
+from utils.logging import get_legal_logger
 
 
 @dataclass

@@ -18,7 +18,7 @@ within the correct US jurisdiction for accurate legal analysis.
 """
 
 # Core US jurisdiction system components
-from .us_system import (
+from jurisdiction.us_system import (
     # Data structures
     JurisdictionMetadata,
     
@@ -45,7 +45,7 @@ from .us_system import (
 )
 
 # Jurisdiction Inference Engine
-from .inference_engine import (
+from jurisdiction.inference_engine import (
     USJurisdictionInferenceEngine,
     JurisdictionInferenceResult,
     InferenceConfidence,
@@ -53,7 +53,7 @@ from .inference_engine import (
 )
 
 # Jurisdiction Compliance Judge
-from .compliance_judge import (
+from jurisdiction.compliance_judge import (
     JurisdictionComplianceJudge,
     ComplianceViolationType,
     ComplianceViolation,

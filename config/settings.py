@@ -29,7 +29,7 @@ from pathlib import Path
 from dataclasses import dataclass, field
 
 # Import core components
-from ..core import (
+from core import (
     APIProvider, LegalTaskType, USJurisdiction, CacheStrategy,
     RateLimitStrategy, LogLevel, ConfigurationError, 
     create_error_context, VALID_API_PROVIDERS, VALID_TASK_TYPES

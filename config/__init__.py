@@ -14,7 +14,7 @@ configuration functionality.
 """
 
 # Main configuration management
-from .settings import (
+from config.settings import (
     LegalRewardSystemConfig,
     ConfigValidator,
     ConfigValidationResult,
