@@ -133,16 +133,6 @@ class VERLDataConverter:
             ]
         }
         
-        # Jurisdiction inference keywords
-        self.jurisdiction_keywords = {
-            "federal": ["federal", "supreme court", "circuit court", "district court", "usc", "cfr"],
-            "california": ["california", "ca", "calif", "san francisco", "los angeles"],
-            "new_york": ["new york", "ny", "manhattan", "brooklyn", "nyc"],
-            "texas": ["texas", "tx", "houston", "dallas", "austin"],
-            "florida": ["florida", "fl", "miami", "tampa", "orlando"],
-            # Add more states as needed
-        }
-    
     def convert_verl_to_legal_data_point(self, 
                                    data_source: str,
                                    solution_str: str,
@@ -157,10 +147,8 @@ class VERLDataConverter:
             # Extract or infer jurisdiction
             jurisdiction = self._infer_jurisdiction(solution_str, ground_truth, extra_info)
             
-            # FIX: Extract legal domains and convert to single domain for LegalDataPoint
-            legal_domains_list = self._infer_legal_domains(solution_str, ground_truth, extra_info)
-            # Use the first domain or default to GENERAL
-            legal_domain = legal_domains_list[0] if legal_domains_list else LegalDomain.GENERAL
+            # Extract legal domains and convert to single domain for LegalDataPoint
+            legal_domain = self._infer_legal_domains(solution_str, ground_truth, extra_info)
             
             # Create legal data point with correct parameter name
             legal_data_point = LegalDataPoint(
@@ -168,12 +156,11 @@ class VERLDataConverter:
                 response=solution_str,
                 task_type=task_type,
                 jurisdiction=jurisdiction.value,
-                legal_domain=legal_domain,  # FIX: Use legal_domain (singular) not legal_domains
+                legal_domain=legal_domain,
                 metadata={
                     "verl_data_source": data_source,
                     "verl_ground_truth": ground_truth,
                     "verl_extra_info": extra_info or {},
-                    "legal_domains_list": [d.value for d in legal_domains_list],  # Store full list in metadata
                     "conversion_timestamp": time.time()
                 }
             )
@@ -186,7 +173,6 @@ class VERLDataConverter:
             # Create fallback data point
             return self._create_fallback_data_point(data_source, solution_str, str(e))
 
-    
     def convert_batch_verl_data(self, batch_data: List[Dict[str, Any]]) -> List[LegalDataPoint]:
         """
         Convert batch of VERL data to LegalDataPoint list.
@@ -278,33 +264,45 @@ class VERLDataConverter:
             except ValueError:
                 pass
         
-        # Infer from text content
-        combined_text = f"{solution_str} {ground_truth}".lower()
+        # Use your existing inference engine
+        from jurisdiction.inference_engine import JurisdictionInferenceEngine
         
-        for jurisdiction_name, keywords in self.jurisdiction_keywords.items():
-            for keyword in keywords:
-                if keyword in combined_text:
-                    try:
-                        return USJurisdiction(jurisdiction_name)
-                    except ValueError:
-                        continue
+        if not hasattr(self, '_jurisdiction_engine'):
+            self._jurisdiction_engine = JurisdictionInferenceEngine()
         
-        return USJurisdiction.GENERAL
+        # Combine text for analysis
+        combined_text = f"{solution_str} {ground_truth}"
+        
+        # Get inference result
+        result = self._jurisdiction_engine.infer_jurisdiction(
+            content=combined_text,
+            context=extra_info
+        )
+        
+        # Return jurisdiction if confident, otherwise general
+        if result.is_confident(threshold=0.6):
+            return result.jurisdiction
+        else:
+            return USJurisdiction.GENERAL
     
     def _infer_legal_domains(self, solution_str: str, ground_truth: str, extra_info: Optional[Dict]) -> List[LegalDomain]:
         """Infer legal domains from content"""
         
         # For now, return general domain; can be enhanced with domain-specific keyword matching
-        if extra_info and "legal_domains" in extra_info:
-            domains = []
-            for domain_str in extra_info["legal_domains"]:
-                try:
-                    domains.append(LegalDomain(domain_str))
-                except ValueError:
-                    continue
-            return domains
+        if extra_info and "legal_domain" in extra_info:
+            try:
+                return LegalDomain(extra_info["legal_domain"])
+            except ValueError:
+                pass
+            # domains = []
+            # for domain_str in extra_info["legal_domains"]:
+            #     try:
+            #         domains.append(LegalDomain(domain_str))
+            #     except ValueError:
+            #         continue
+            # return domains
         
-        return [LegalDomain.GENERAL]
+        return LegalDomain.GENERAL #[LegalDomain.GENERAL]
     
     def _create_fallback_data_point(self, data_source: str, solution_str: str, error_msg: str) -> LegalDataPoint:
         """Create fallback data point when conversion fails"""
@@ -314,7 +312,7 @@ class VERLDataConverter:
             response=solution_str[:500] if solution_str else "No response provided",
             task_type=LegalTaskType.GENERAL_CHAT,
             jurisdiction=USJurisdiction.GENERAL,
-            legal_domain=LegalDomain.GENERAL,  # FIX: Use legal_domain (singular)
+            legal_domain=LegalDomain.GENERAL,
             metadata={
                 "conversion_error": True,
                 "error_message": error_msg,
@@ -340,7 +338,6 @@ class VERLLegalRewardFunction:
         # Initialize configuration
         self.config = config or create_production_config()
         
-        # FIX: Initialize router with correct interface if not provided
         if router:
             self.router = router
         else:
@@ -359,7 +356,6 @@ class VERLLegalRewardFunction:
                 aggressive_cost_optimization=True
             )
             
-            # FIX: Use correct constructor interface
             self.router = MultiTaskLegalRewardRouter(router_config, self.config)
         
         # Initialize components
@@ -404,20 +400,22 @@ class VERLLegalRewardFunction:
             legal_data_point = self.converter.convert_verl_to_legal_data_point(
                 data_source, solution_str, ground_truth, extra_info
             )
-            
+
             # Create evaluation request
             request = EvaluationRequest(
                 response=legal_data_point.response,
-                task_type=legal_data_point.task_type,
+                task_type=LegalTaskType(legal_data_point.task_type),
                 prompt=legal_data_point.query,
-                jurisdiction=legal_data_point.jurisdiction,
+                jurisdiction=USJurisdiction(legal_data_point.jurisdiction),
                 legal_domains=[legal_data_point.legal_domain],
                 user_context=legal_data_point.metadata
             )
             
             # Evaluate through router
+            print("Before I ask am make e evaluate response")
             result = await self.router.evaluate_response(request)
-            
+            print("E suppose don evaluate response for here")
+
             # Extract final score
             final_score = result.final_score
             
@@ -795,7 +793,6 @@ def create_training_verl_function(config: Optional[LegalRewardSystemConfig] = No
         aggressive_cost_optimization=True
     )
     
-    # FIX: Use correct constructor interface
     router = MultiTaskLegalRewardRouter(router_config, config)
     
     # Create VERL function with the router
@@ -805,7 +802,6 @@ def create_training_verl_function(config: Optional[LegalRewardSystemConfig] = No
         enable_caching=True,
         enable_cost_tracking=True
     )
-
 
 def create_development_verl_function(config: Optional[LegalRewardSystemConfig] = None) -> VERLLegalRewardFunction:
     """Create VERL function for development"""
@@ -855,7 +851,7 @@ def multi_task_legal_reward_function(data_source: str,
             # Create and cache the VERL function instance
             config = create_production_config()
             multi_task_legal_reward_function._verl_function = create_training_verl_function(config)
-        
+            
         verl_function = multi_task_legal_reward_function._verl_function
         
         # Use the instance to compute reward

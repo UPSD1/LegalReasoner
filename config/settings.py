@@ -524,7 +524,6 @@ class LegalRewardSystemConfig:
     
     def __init__(self, config_path: Optional[str] = None):
         self.logger = logging.getLogger(f"{__name__}.LegalRewardSystemConfig")
-        
         # Configuration management components
         self.environment_manager = EnvironmentManager()
         self.config_validator = ConfigValidator()

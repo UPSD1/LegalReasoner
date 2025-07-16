@@ -176,16 +176,19 @@ Improvements: [How helpfulness could be enhanced]
             
             # Create judge evaluation
             judge_evaluation = JudgeEvaluation(
+                judge_name=self.config.judge_name,
                 score=score,
                 reasoning=reasoning,
                 confidence=confidence,
-                judge_type="helpfulness",
-                evaluation_metadata=EvaluationMetadata(
-                    judge_name=self.config.judge_name,
-                    task_type=context.task_type,
-                    jurisdiction=context.jurisdiction,
-                    evaluation_method="api_based_helpfulness",
-                    processing_time_ms=(time.time() - start_time) * 1000
+                metadata=EvaluationMetadata(
+                    evaluation_type="api_based_helpfulness",
+                    execution_time=(time.time() - start_time) * 1000,
+                    cache_hit=False,
+                    additional_info={
+                        "task_type": context.task_type.value,
+                        "jurisdiction": context.jurisdiction.value,
+                        "judge_type": "helpfulness",
+                    }
                 )
             )
             
@@ -266,14 +269,14 @@ Improvements: Could provide more specific examples or resources
         """Create fallback evaluation for error cases"""
         
         return JudgeEvaluation(
+            judge_name=self.config.judge_name,
             score=score,
             reasoning=reasoning,
             confidence=confidence,
-            judge_type="helpfulness",
-            evaluation_metadata=EvaluationMetadata(
-                judge_name=self.config.judge_name,
-                evaluation_method="fallback",
-                additional_info={"fallback_reason": "API evaluation failed"}
+            metadata=EvaluationMetadata(
+                evaluation_type="fallback",
+                additional_info={"fallback_reason": "API evaluation failed",
+                                 "judge_type":"helpfulness",}
             )
         )
 
@@ -356,16 +359,19 @@ Recommendations: [Suggestions for ethical compliance]
             
             # Create judge evaluation
             judge_evaluation = JudgeEvaluation(
+                judge_name=self.config.judge_name,
                 score=score,
                 reasoning=reasoning,
                 confidence=confidence,
-                judge_type="legal_ethics",
-                evaluation_metadata=EvaluationMetadata(
-                    judge_name=self.config.judge_name,
-                    task_type=context.task_type,
-                    jurisdiction=context.jurisdiction,
-                    evaluation_method="api_based_ethics",
-                    processing_time_ms=(time.time() - start_time) * 1000
+                evaluation_time=(time.time() - start_time) * 1000,
+                metadata=EvaluationMetadata(
+                    evaluation_type="api_based_ethics",
+                    cache_hit=False,
+                    additional_info={
+                        "judge_type":"legal_ethics",
+                        "task_type":context.task_type.value,
+                        "jurisdiction":context.jurisdiction.value,
+                    }
                 )
             )
             
@@ -443,14 +449,16 @@ Recommendations: Add more explicit disclaimer about consulting local attorneys
         """Create fallback evaluation for error cases"""
         
         return JudgeEvaluation(
+            judge_name=self.config.judge_name,
             score=score,
             reasoning=reasoning,
             confidence=confidence,
-            judge_type="legal_ethics",
-            evaluation_metadata=EvaluationMetadata(
-                judge_name=self.config.judge_name,
-                evaluation_method="fallback",
-                additional_info={"fallback_reason": "API evaluation failed"}
+            metadata=EvaluationMetadata(
+                evaluation_type="fallback",
+                additional_info={
+                    "fallback_reason": "API evaluation failed",
+                    "judge_type":"legal_ethics"
+                }
             )
         )
 
@@ -534,16 +542,19 @@ Improvements: [Specific suggestions for better clarity]
             
             # Create judge evaluation
             judge_evaluation = JudgeEvaluation(
+                judge_name=self.config.judge_name,
                 score=score,
                 reasoning=reasoning,
                 confidence=confidence,
-                judge_type="clarity",
-                evaluation_metadata=EvaluationMetadata(
-                    judge_name=self.config.judge_name,
-                    task_type=context.task_type,
-                    jurisdiction=context.jurisdiction,
-                    evaluation_method="api_based_clarity",
-                    processing_time_ms=(time.time() - start_time) * 1000
+                evaluation_time=(time.time() - start_time) * 1000,
+                metadata=EvaluationMetadata(
+                    cache_hit=False,
+                    evaluation_type="api_based_clarity",
+                    additional_info={
+                        "task_type":context.task_type.value,
+                        "jurisdiction":context.jurisdiction.value,
+                        "judge_type":"clarity"
+                    }
                 )
             )
             
@@ -622,14 +633,16 @@ Improvements: Consider adding a brief summary or key takeaways section
         """Create fallback evaluation for error cases"""
         
         return JudgeEvaluation(
+            judge_name=self.config.judge_name,
             score=score,
             reasoning=reasoning,
             confidence=confidence,
-            judge_type="clarity",
-            evaluation_metadata=EvaluationMetadata(
-                judge_name=self.config.judge_name,
-                evaluation_method="fallback",
-                additional_info={"fallback_reason": "API evaluation failed"}
+            metadata=EvaluationMetadata(
+                evaluation_type="fallback",
+                additional_info={
+                    "fallback_reason": "API evaluation failed",
+                    "judge_type":"clarity",
+                }
             )
         )
 

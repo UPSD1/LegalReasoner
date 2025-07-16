@@ -97,7 +97,7 @@ def test_comprehensive_legal_reward_system():
             'extra_info': {
                 'task_type': 'general_chat',
                 'jurisdiction': 'california',
-                'legal_area': 'contract_law'
+                'legal_domain': 'contract_law'
             }
         },
         {
@@ -108,7 +108,7 @@ def test_comprehensive_legal_reward_system():
             'extra_info': {
                 'task_type': 'judicial_reasoning',
                 'jurisdiction': 'federal',
-                'legal_area': 'constitutional_law'
+                'legal_domain': 'constitutional_law'
             }
         }
     ]

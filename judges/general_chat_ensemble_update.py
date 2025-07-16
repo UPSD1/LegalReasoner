@@ -378,7 +378,7 @@ class EnhancedGeneralChatEnsemble(BaseJudgeEnsemble):
                 query=context.query,
                 response=context.response,
                 judge_type="general_chat_helpfulness",
-                task_type="general_chat",
+                task_type=LegalTaskType.GENERAL_CHAT,
                 jurisdiction=context.jurisdiction,
                 prompt_template=prompt
             )
@@ -401,7 +401,7 @@ class EnhancedGeneralChatEnsemble(BaseJudgeEnsemble):
                 query=context.query,
                 response=context.response,
                 judge_type="general_chat_legal_ethics",
-                task_type="general_chat",
+                task_type=LegalTaskType.GENERAL_CHAT,
                 jurisdiction=context.jurisdiction,
                 prompt_template=prompt
             )
@@ -424,7 +424,7 @@ class EnhancedGeneralChatEnsemble(BaseJudgeEnsemble):
                 query=context.query,
                 response=context.response,
                 judge_type="general_chat_clarity",
-                task_type="general_chat",
+                task_type=LegalTaskType.GENERAL_CHAT,
                 jurisdiction=context.jurisdiction,
                 prompt_template=prompt
             )
@@ -464,7 +464,7 @@ class EnhancedGeneralChatEnsemble(BaseJudgeEnsemble):
                 query=context.query,
                 response=context.response,
                 judge_type="jurisdiction_compliance_general_chat",
-                task_type="general_chat",
+                task_type=LegalTaskType.GENERAL_CHAT,
                 jurisdiction=context.jurisdiction,
                 prompt_template=prompt
             )

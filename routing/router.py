@@ -106,6 +106,9 @@ class RouterConfig:
     specialized_weight: float = 0.7
     general_chat_weight: float = 0.3
     jurisdiction_failure_penalty: float = 0.2
+
+    # Quality control settings
+    min_confidence_threshold: float = 0.5  # ← ADD THIS FIELD
     
     def validate_config(self) -> List[str]:
         """Validate router configuration and return any issues"""
@@ -136,6 +139,10 @@ class RouterConfig:
         if self.router_mode not in RouterMode:
             issues.append(f"Invalid router_mode: {self.router_mode}")
         
+        # Validate confidence threshold
+        if not (0.0 <= self.min_confidence_threshold <= 1.0):
+            issues.append("min_confidence_threshold must be between 0.0 and 1.0")
+
         return issues
     
     def get(self, key: str, default=None):
@@ -159,7 +166,8 @@ class RouterConfig:
             "prefer_cached_results": self.prefer_cached_results,
             "specialized_weight": self.specialized_weight,
             "general_chat_weight": self.general_chat_weight,
-            "jurisdiction_failure_penalty": self.jurisdiction_failure_penalty
+            "jurisdiction_failure_penalty": self.jurisdiction_failure_penalty,
+            "min_confidence_threshold": self.min_confidence_threshold 
         }
     
     @classmethod
