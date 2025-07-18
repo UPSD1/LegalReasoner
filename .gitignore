@@ -201,7 +201,7 @@ ehthumbs_vista.db
 
 # Large data files
 *.csv
-# *.json
+*.json
 *.parquet
 data/
 datasets/
@@ -209,7 +209,7 @@ datasets/
 # Model files
 models/
 *.model
-# *.pkl
+*.pkl
 *.pickle
 
 # Training outputs
