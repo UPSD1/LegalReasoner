@@ -412,12 +412,11 @@ class VERLLegalRewardFunction:
             )
             
             # Evaluate through router
-            print("Before I ask am make e evaluate response")
             result = await self.router.evaluate_response(request)
-            print("E suppose don evaluate response for here")
 
             # Extract final score
             final_score = result.final_score
+            print("Final score: ", final_score)
             
             # Update metrics
             processing_time = time.time() - start_time
