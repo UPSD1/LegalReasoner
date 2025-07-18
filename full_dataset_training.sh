@@ -71,8 +71,8 @@ echo "⏰ Starting legal GRPO training with GPT-4o-mini rewards..."
 # Modified configuration for model-based rewards with correct Verl custom reward function setup
 PYTHONUNBUFFERED=1 python3 -m verl.trainer.main_ppo \
 algorithm.adv_estimator=grpo \
-data.train_files=$data/legal_model_rewards/train.parquet \
-data.val_files=$data/legal_model_rewards/test.parquet \
+data.train_files=$data/legal_dataset/train.parquet \
+data.val_files=$data/legal_dataset/test.parquet \
 data.train_batch_size=4 \
 data.max_prompt_length=256 \
 data.max_response_length=512 \
