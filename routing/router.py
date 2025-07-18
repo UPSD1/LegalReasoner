@@ -378,7 +378,7 @@ class MultiTaskLegalRewardRouter:
         # Initialize logger first
         self.logger = get_legal_logger("multi_task_router")
         
-        # FIX: Validate RouterConfig if it has validation method
+        # Validate RouterConfig if it has validation method
         if hasattr(self.config, 'validate_config'):
             config_issues = self.config.validate_config()
             if config_issues:
@@ -756,6 +756,22 @@ class MultiTaskLegalRewardRouter:
             
             return error_result
     
+    # async def _check_evaluation_cache(self, request: EvaluationRequest) -> Optional[RouterEvaluationResult]:
+    #     """Check cache for existing evaluation result"""
+        
+    #     if not self.cache:
+    #         return None
+        
+    #     try:
+    #         cache_key = request.get_cache_key()
+    #         # Cache integration would be implemented here
+    #         # This is a placeholder for the actual cache lookup
+    #         return None
+            
+    #     except Exception as e:
+    #         self.logger.warning(f"Cache check failed: {e}")
+    #         return None
+
     async def _check_evaluation_cache(self, request: EvaluationRequest) -> Optional[RouterEvaluationResult]:
         """Check cache for existing evaluation result"""
         
@@ -764,8 +780,12 @@ class MultiTaskLegalRewardRouter:
         
         try:
             cache_key = request.get_cache_key()
-            # Cache integration would be implemented here
-            # This is a placeholder for the actual cache lookup
+            cached_data = self.cache.get_cached_response(cache_key)
+            
+            if cached_data:
+                self.router_stats["cache_hits"] += 1
+                return RouterEvaluationResult.from_cache(cached_data)
+            
             return None
             
         except Exception as e:
@@ -827,7 +847,7 @@ class MultiTaskLegalRewardRouter:
         
         # Fallback to general chat evaluation only
         else:
-            from ..judges.base import create_evaluation_context
+            from judges.base import create_evaluation_context
             
             context = create_evaluation_context(
                 task_type=request.task_type,

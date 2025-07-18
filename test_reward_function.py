@@ -96,8 +96,8 @@ def test_comprehensive_legal_reward_system():
             'ground_truth': 'What are the basic elements of a contract?',
             'extra_info': {
                 'task_type': 'general_chat',
-                'jurisdiction': 'california',
-                'legal_domain': 'contract_law'
+                'jurisdiction': 'florida',
+                'legal_domain': 'employment'
             }
         },
         {
@@ -106,9 +106,9 @@ def test_comprehensive_legal_reward_system():
             'solution_str': 'Based on the precedent in Marbury v. Madison, the Supreme Court has the power of judicial review to determine the constitutionality of laws.',
             'ground_truth': 'Explain the principle of judicial review.',
             'extra_info': {
-                'task_type': 'judicial_reasoning',
-                'jurisdiction': 'federal',
-                'legal_domain': 'constitutional_law'
+                'task_type': 'opinion_generation',
+                'jurisdiction': 'arizona',
+                'legal_domain': 'evidence'
             }
         }
     ]

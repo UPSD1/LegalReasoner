@@ -844,7 +844,10 @@ def multi_task_legal_reward_function(data_source: str,
     This is the main entry point that VERL will call during training.
     """
     logger = get_legal_logger("multi_task_legal_reward_function")
-    
+    print("\n\nData source:  ",data_source)
+    print("\n\nSolution_str:  ", solution_str)
+    print("\n\nGround truth:  ", ground_truth)
+    print("\n\nExtra Info:  ", extra_info)
     try:
         # Create VERL function instance with proper configuration
         if not hasattr(multi_task_legal_reward_function, '_verl_function'):
