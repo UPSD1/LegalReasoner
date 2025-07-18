@@ -7,7 +7,7 @@ train_data = train_set
 test_data = test_set
 
 # Save as parquet (SAME structure)
-output_dir = '/data/legal_dataset'
+output_dir = './data/legal_dataset'
 os.makedirs(output_dir, exist_ok=True)
 
 print(f"data will be stored {output_dir}")
