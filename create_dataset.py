@@ -38,6 +38,6 @@ print(f'\\n⚖️ Sample Legal Questions:')
 for i, item in enumerate(train_data[:3]):
     question = item['prompt'][0]['content']
     answer = item['reward_model']['ground_truth']
-    area = item['reward_model']['legal_domain']
+    area = item['extra_info']['legal_domain']
     print(f'   {i+1}. [{area}] {question}')
     print(f'      Expected: {answer}')
