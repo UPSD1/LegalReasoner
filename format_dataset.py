@@ -10,6 +10,29 @@ import copy
 from custom_datasets import train_set, test_set
 from dataset_prefix_helper import create_enhanced_prompt
 
+def extract_question(prompt_text):
+    """
+    Extracts the question from a legal prompt that ends with 'Question: [question text]'
+    
+    Args:
+        prompt_text (str): The full prompt containing system instructions and question
+        
+    Returns:
+        str: Just the question text, or empty string if no question found
+    """
+    # Find the last occurrence of "Question: " in the text
+    question_marker = "Question: "
+    
+    # Find the index of the question marker
+    question_index = prompt_text.rfind(question_marker)
+    
+    if question_index != -1:
+        # Extract everything after "Question: "
+        question = prompt_text[question_index + len(question_marker):].strip()
+        return question
+    
+    return ""
+
 def process_data(train: list, test: list) -> tuple:
     """
     Process train and test data
@@ -29,6 +52,7 @@ def process_data(train: list, test: list) -> tuple:
         # Modify content - add search prefix
         if 'prompt' in processed and len(processed['prompt']) > 0:
             original_content = processed['prompt'][0]['content']
+            original_content = extract_question(original_content)
             processed['prompt'][0]['content'] = create_enhanced_prompt(original_content)
             
         # Modify ground_truth - wrap string in list
