@@ -100,21 +100,25 @@ class RewardManager():
             # decode
             sequences = torch.cat((valid_prompt_ids, valid_response_ids))
             sequences_str = self.tokenizer.decode(sequences)
+            
+            try:
+                ground_truth = data_item.non_tensor_batch['reward_model']['ground_truth']
+    
+                # select rm_score
+                data_source = data_item.non_tensor_batch['data_source']
+    
+                extra_info = data_item.non_tensor_batch['extra_info']
+                compute_score_fn = _select_rm_score_fn(data_source, self.custom_reward_path, self.custom_reward_name)
+    
+                if self.custom_reward_name and self.custom_reward_path:
+                    answer = extract_solution(solution_str=sequences_str)
+                    target = ground_truth['target'][0]
+                    score = compute_score_fn(data_source,answer, target, extra_info)
+                else:    
+                    score = compute_score_fn(solution_str=sequences_str, ground_truth=ground_truth, format_score=self.format_score)
 
-            ground_truth = data_item.non_tensor_batch['reward_model']['ground_truth']
-
-            # select rm_score
-            data_source = data_item.non_tensor_batch['data_source']
-
-            extra_info = data_item.non_tensor_batch['extra_info']
-            compute_score_fn = _select_rm_score_fn(data_source, self.custom_reward_path, self.custom_reward_name)
-
-            if self.custom_reward_name and self.custom_reward_path:
-                answer = extract_solution(solution_str=sequences_str)
-                target = ground_truth['target'][0]
-                score = compute_score_fn(data_source,answer, target, extra_info)
-            else:    
-                score = compute_score_fn(solution_str=sequences_str, ground_truth=ground_truth, format_score=self.format_score)
+            except:
+                score = 0.01
 
             reward_tensor[i, valid_response_length - 1] = score
             # all_scores.append(score)
